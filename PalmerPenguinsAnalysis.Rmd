@@ -151,3 +151,222 @@ penguins %>%
   geom_point(aes(x = bill_length_mm, y = bill_depth_mm, color = species)) + 
   geom_smooth(aes(x = bill_length_mm, y = bill_depth_mm, color = species), method = "lm")
 ```
+
+# 1/24/23 
+```{r}
+library(tidyverse)
+library(kableExtra)
+penguins %>%
+  summarize(avg_bill_length = mean(bill_length_mm))
+
+t.test(penguins$bill_length_mm, alternative = "greater", mu = 45, conf.level = 0.95)
+```
++ The work above is not ethical due to the fact that R created the test and both tried to solve it. 
+# Reviewing Statistics
++ We assumed the central limit theorem
+  + The sampling distribution tends towards a normal distribution as sample sizes get larger
+# Simulation-based Methods
++ Assumption: our data is randomly sampled and is representative of our population
+  + Bootstrapping: Treating our sample as if it were the population
+  
+# Homework 1/26 Summarizing Data
+
+```{r}
+penguins%>%
+    count(island)
+```
+
++ This output shows us the number of penguins on a specified island. 
+
+```{r}
+penguins%>%
+  count(species)
+```
+
++ This code cell gives us the number of penguins per specified species. 
+
+```{r}
+penguins%>%
+  count(island, species) %>%
+  pivot_wider(names_from = species, values_from = n, values_fill = 0) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("hover", "striped"))
+```
+
++ This output separates penguins per species per island rather than the previous two which only focus on one specific variable. 
+
+# Getting the Average
+
+```{r}
+penguins%>%
+  summarize(mean_bill_length_mm = mean(bill_length_mm, na.rm = TRUE))
+```
+```{r}
+penguins %>%
+  summarize(
+    min_bill_length = min(bill_length_mm, na.rm = TRUE),
+    first_quartile_bill_length = quantile(bill_length_mm, 0.25, na.rm = TRUE),
+    median_bill_length = median(bill_length_mm, na.rm = TRUE),
+    mean_bill_length_mm = mean(bill_length_mm, na.rm = TRUE),
+    third_quartile_bill_length = quantile(bill_length_mm, 0.75, na.rm = TRUE),
+    standard_deviation_bill_length = sd(bill_length_mm, na.rm = TRUE)
+    ) %>%
+  pivot_longer(cols = everything())
+```
+```{r}
+penguins %>%
+  summarize(
+    min_bill_length = min(bill_length_mm, na.rm = TRUE),
+    first_quartile_bill_length = quantile(bill_length_mm, 0.25, na.rm = TRUE),
+    median_bill_length = median(bill_length_mm, na.rm = TRUE),
+    mean_bill_length_mm = mean(bill_length_mm, na.rm = TRUE),
+    third_quartile_bill_length = quantile(bill_length_mm, 0.75, na.rm = TRUE),
+    standard_deviation_bill_length = sd(bill_length_mm, na.rm = TRUE)
+    ) %>%
+  kable() %>%
+  kable_styling(bootstrap_options = c("hover", "striped"))
+```
+
++ Don't change that last line because it's ugly now. 
+
+# Selecting Specific Columns and Rows
+
+```{r}
+penguins %>%
+  select(species, island, sex, year)
+```
+```{r}
+penguins %>%
+  select(species, island, sex, year) %>%
+  filter(species == "Chinstrap")
+```
+```{r}
+chinstraps <- penguins %>%
+  select(species, island, sex, year) %>%
+  filter(species == "Chinstrap") %>%
+  select(-species)
+
+chinstraps %>%
+  head()
+```
+
+# Grouping and Summarizing 
+```{r}
+penguins %>%
+  group_by(species) %>%
+  summarise(
+    mean_bill_depth_mm = mean(bill_depth_mm, na.rm = TRUE),
+    sd_bill_depth_mm = sd(bill_depth_mm, na.rm = TRUE)
+  )
+```
+
++ What I've noticed is that this code populates a chart categorizing species by the mean and standard deviation based off bill depths. 
+
+# Data Visualization with `ggplot()`
+
+One Categorical Variable:  We can visualize a categorical variable with a barplot.
+
+```{r}
+penguins %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = species)) + 
+  labs(title = "Counts of Penguin Species", 
+       x = "Species", y = "Count")
+```
+
++ This plot is a ggplot which uses + signs. These + signs are used to specify which variables we want to use, the types of titles we use, and some visual components. I'm guessing that we use + signs so that the system can we realize what type of information we are adding (meaning that we're not adding anything new and just visually modifying what is exported). 
+
+```{r}
+penguins %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = island)) + 
+  labs(title = "Counts of Penguin per Island", 
+       x = "Island", y = "Count")
+```
+
++ This ggplot is doing the same thing as the previous one but instead looks at the count of penguins per island rather than species. 
+
+One Numerical Variable: uses histogram, density, or boxplot
+
+```{r}
+penguins %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = bill_length_mm),
+                 color = "white",
+                 fill = "blue") +
+  labs(title ="Distribution of Bill Lengths",
+       x = "Bill Length (mm)", y = "Count")
+```
+
+```{r}
+penguins %>%
+  ggplot() +
+  geom_density(mapping = aes(x = bill_length_mm),
+                 color = "white",
+                 fill = "blue") +
+  labs(title ="Distribution of Bill Lengths",
+       x = "Bill Length (mm)", y = "Count")
+```
+
+These plots, both histogram and density, are showing the distribution of penguins with a certain bill length. The histogram, I think, does a much better job at showing the distributions whereas you wouldn't be able to pinpoint exactly how many penguins have a specific bill length. 
+
+Two Numerical Variables: relationship between two numerical variables with scatterplot
+
+```{r}
+penguins %>%
+  ggplot() +
+  geom_point(mapping = aes(x = bill_depth_mm, y = bill_length_mm)) +
+  labs(title = "Bill Depth and Length",
+       x = "Bill Depth (mm)",
+       y = "Bill Length (mm)")
+```
+
++ I think  what I found most interesting is that the data doesn't stay consistent in terms of the trends. Some of our data points later on to the right in our graph, specifically the one that lies all the way at the end, looks like it would be an outliar. 
+
+```{r}
+penguins %>%
+  ggplot() +
+  geom_point(mapping = aes(x = flipper_length_mm, y = body_mass_g)) +
+  labs(title = "Bill Depth and Length",
+       x = "Flipper Lengthh (mm)",
+       y = "Body Massh (g)")
+```
+
+# Two Categorical Variables: associations between pairs of categorical variables using barplots and fill
+
+```{r}
+penguins %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = island, fill = species)) +
+  labs(title = "Species by Island",
+       x = "Island",
+       y = "Species")
+```
+
++ This plot uses more visually appealing data to show the distribution of species of animal per island using different colors. I like this plot because it very easy to put into perspective tons of different factors such as the distribution of species per island compared to the other islands or which species is more populated in which areas. 
+# One Numerical and One Categorical Variable: effective visualizations
+
+```{r}
+penguins %>%
+  ggplot() +
+  geom_boxplot(mapping = aes(x = bill_depth_mm, y = species)) +
+  labs(title = "Bill Depth by Species",
+       x = "Bill Depth (mm)",
+       y = "")
+```
+
+```{r}
+penguins %>%
+  ggplot() +
+  geom_histogram(mapping = aes(x = bill_depth_mm)) +
+  facet_wrap(~species, ncol = 1) +
+  labs(title = "Bill Depth by Species",
+       x = "Bill Depth (mm)",
+       y = "")
+```
+
++ In these plots, we are visualizing bill depth by species in two different ways. The first one is a boxplot and the second one is a histogram. If you understand boxplots, then the first one will make sense. If you don't, the second one helps you to visualize the information much more easily. 
+
+
+
+
