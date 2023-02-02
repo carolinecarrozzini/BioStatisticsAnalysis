@@ -6,7 +6,6 @@ output: html_document
 ---
 
 ```{r}
-install.packages("tidytuesdayR")
 library(tidyverse)
 ```
 ```{r}
@@ -14,7 +13,7 @@ nyc_squirrels <- readr::read_csv("https://raw.githubusercontent.com/rfordatascie
 ```
 
 ```{r}
-install.packages("tidymodels")
+#install.packages("tidymodels")
 library(tidymodels)
 nyc_squirrels_splits <- initial_split(nyc_squirrels, prop = 0.5)
 exploratory_data <- training(nyc_squirrels_splits)
@@ -24,13 +23,17 @@ test_data <- testing(nyc_squirrels_splits)
 
 # Exploratory Data Questions
 
-+ What was the distribution of squirrel color?
++ What is the distribution of squirrel color?
 
 + Where are the squirrels found?
 
-+ How many of the squirrels that were kukking were also tail twitching or tail flagging?
++ What is the distribution of squirrel color based on age?
 
-+ How many of the squirrels that were running were also running away from something?
++ What is the distribution of squirrel color based on location?
+
++ In what locations are the squirrels eating?
+
++ What is the distribution of perceived height in trees based on age?
 
 ```{r}
 nyc_squirrels %>%
@@ -113,4 +116,4 @@ nyc_squirrels %>%
 # Hypotheses
 
 + 1. Do squirrels fur colors change with age?
-+ 2. Do squirrels climb higher up with an increase in age?
++ 2. Does squirrels' climbing potential change with age?
