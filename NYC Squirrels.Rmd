@@ -1,0 +1,116 @@
+---
+title: "NY Squirrels"
+author: "Caroline Carrozzini"
+date: "1/31/2023"
+output: html_document
+---
+
+```{r}
+install.packages("tidytuesdayR")
+library(tidyverse)
+```
+```{r}
+nyc_squirrels <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-10-29/nyc_squirrels.csv")
+```
+
+```{r}
+install.packages("tidymodels")
+library(tidymodels)
+nyc_squirrels_splits <- initial_split(nyc_squirrels, prop = 0.5)
+exploratory_data <- training(nyc_squirrels_splits)
+test_data <- testing(nyc_squirrels_splits)
+```
+
+
+# Exploratory Data Questions
+
++ What was the distribution of squirrel color?
+
++ Where are the squirrels found?
+
++ How many of the squirrels that were kukking were also tail twitching or tail flagging?
+
++ How many of the squirrels that were running were also running away from something?
+
+```{r}
+nyc_squirrels %>%
+  ggplot() + 
+  geom_bar(mapping = aes(x = primary_fur_color)) + 
+  labs(title = "Counts of Squirrel Fur Color Distribution", 
+       x = "Fur Color", y = "Count")
+```
+
+```{r}
+nyc_squirrels %>%
+  ggplot() +
+  geom_point(mapping = aes(x = long, y = lat)) +
+  labs(title = "Location of Squirrels",
+       x = "Longitude",
+       y = "Latitude")
+```
+
+```{r}
+nyc_squirrels %>%
+  ggplot() +
+  geom_bar(mapping = aes(x = age, fill = primary_fur_color)) +
+  labs(title = "Fur color by age",
+       x = "Age",
+       y = "Fur color")
+```
+
+```{r}
+nyc_squirrels %>%
+  ggplot() +
+  geom_point(mapping = aes(x = long, y = lat, color = primary_fur_color)) +
+  labs(title = "Location of Squirrels",
+       x = "Longitude",
+       y = "Latitude")
+```
+
+```{r}
+nyc_squirrels %>%
+  ggplot() +
+  geom_density(mapping = aes(x = long),
+                 color = "white",
+                 fill = "blue") +
+  labs(title ="Distribution of Longitude",
+       x = "Longitude)", y = "Count")
+```
+
+```{r}
+nyc_squirrels %>%
+  ggplot() +
+  geom_density(mapping = aes(x = lat),
+                 color = "white",
+                 fill = "blue") +
+  labs(title ="Distribution of Latitude",
+       x = "Latitude", y = "Count")
+```
+
+```{r}
+nyc_squirrels %>%
+  ggplot() +
+  geom_point(mapping = aes(x = long, y = lat, color = eating)) +
+  labs(title = "Location of Squirrels",
+       x = "Longitude",
+       y = "Latitude")
+```
+
+```{r}
+nyc_squirrels %>%
+  filter(above_ground_sighter_measurement != FALSE) %>%
+  mutate(above_ground_sighter_measurement= as.numeric(above_ground_sighter_measurement)) %>%
+  mutate(age= ifelse(age=="?", NA, age)) %>%
+  ggplot() +
+  geom_density(mapping = aes(x = above_ground_sighter_measurement, fill= age),
+                 color = "white",
+                 fill = "blue") +
+  labs(title ="Above Ground Sightings",
+       x = "Height", y = "Count") +
+  facet_wrap(~age, ncol = 1)
+```
+
+# Hypotheses
+
++ 1. Do squirrels fur colors change with age?
++ 2. Do squirrels climb higher up with an increase in age?

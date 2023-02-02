@@ -367,6 +367,48 @@ penguins %>%
 
 + In these plots, we are visualizing bill depth by species in two different ways. The first one is a boxplot and the second one is a histogram. If you understand boxplots, then the first one will make sense. If you don't, the second one helps you to visualize the information much more easily. 
 
+```{r}
+penguins %>%
+  filter(!is.na(sex)) %>%
+  ggplot() +
+  geom_point(mapping = aes(x = bill_length_mm, 
+                           y = flipper_length_mm,
+                           color = species,
+                           shape = sex)) +
+  geom_smooth(mapping = aes(x = bill_length_mm,
+                            y = flipper_length_mm,
+                            color = species),
+              method = "lm") +
+  facet_grid(island ~ sex, scales = "free") +
+  labs(title = "Flipper and Bill Lengths by Species and Sex",
+       x = "Bill Length (mm)",
+       y = "Flipper Length(mm)") +
+  theme_light()
+```
++ The plot shown above is representing several different types of data. It consists of flipper length, species, sex, and island. The data is basically set up with basic plots showing flipper length within one sex among the different species and then are compared to each other based off of sex and the island that they are one. 
 
+```{r}
+penguins %>%
+  filter(!is.na(species)) %>%
+  ggplot() +
+  geom_point(mapping = aes(x = bill_length_mm, 
+                           y = flipper_length_mm,
+                           color = sex,
+                           shape = species)) +
+  geom_smooth(mapping = aes(x = bill_length_mm,
+                            y = flipper_length_mm,
+                            color = sex),
+              method = "lm") +
+  facet_grid(island ~ sex, scales = "free") +
+  labs(title = "Flipper and Bill Lengths by Species and Sex",
+       x = "Bill Length (mm)",
+       y = "Flipper Length(mm)") +
+  theme_light()
+```
+
++ All I did in this was interchange the sex and species to see how it would be displayed in the graph. Honestly, I hate this and I think that the other way was much easier to understand. In areas where there are a lot of penguins, for example the male biscoe area, the shapes are kind of clumped together and you can't really pinpoint what's going on. 
+
+# Final Question
+This question we did in class but the average bill length did exceed 45 mm. 
 
 
