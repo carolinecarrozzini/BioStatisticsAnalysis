@@ -321,7 +321,7 @@ penguins %>%
        y = "Bill Length (mm)")
 ```
 
-+ I think  what I found most interesting is that the data doesn't stay consistent in terms of the trends. Some of our data points later on to the right in our graph, specifically the one that lies all the way at the end, looks like it would be an outliar. 
++ I think  what I found most interesting is that the data doesn't stay consistent in terms of the trends. Some of our data points later on to the right in our graph, specifically the one that lies all the way at the end, looks like it would be an outlier. 
 
 ```{r}
 penguins %>%
@@ -410,5 +410,4 @@ penguins %>%
 
 # Final Question
 This question we did in class but the average bill length did exceed 45 mm. 
-
 
